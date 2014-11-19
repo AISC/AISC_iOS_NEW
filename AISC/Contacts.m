@@ -51,7 +51,7 @@
 
 -(IBAction)PhoneCallButton:(id)sender
 {
-    [self phoneDialAuto:[sender currentTitle]];
+    [self phoneDialAuto:@"044-22549000"];
 }
 
 -(void)mailSend:(NSString *)mailstr

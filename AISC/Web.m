@@ -6,13 +6,13 @@
 //  Copyright (c) 2014 Angel. All rights reserved.
 //
 
-#import "Smugmug.h"
+#import "Web.h"
 
-@interface Smugmug () <UIWebViewDelegate>
+@interface Web () <UIWebViewDelegate>
 
 @end
 
-@implementation Smugmug
+@implementation Web
 @synthesize m_activity;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -32,7 +32,7 @@
 }
 - (void)viewDidLoad
 {
-    NSURL *url = [NSURL URLWithString:@"http://aiscgallery.smugmug.com/"];
+    NSURL *url = [NSURL URLWithString:self.urlString];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [webView loadRequest:request];
     [super viewDidLoad];

@@ -8,6 +8,7 @@
 
 #import "Home.h"
 #import <Parse/Parse.h>
+#import "Web.h"
 
 @interface Home ()
 
@@ -68,6 +69,19 @@
     } completion:^(BOOL done) {}];
 
 }
+
+
+
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"Photos"]) {
+        Web *webVC = (Web *)segue.destinationViewController;
+        webVC.urlString = @"http://aiscgallery.smugmug.com/";
+        webVC.title = @"Photos";
+    }
+}
+
 
 - (void)didReceiveMemoryWarning
 {

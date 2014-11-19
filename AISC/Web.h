@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface Smugmug : UIViewController
+@interface Web : UIViewController
 {
     IBOutlet UIWebView *webView;
     IBOutlet UIActivityIndicatorView *m_activity;
@@ -17,5 +17,11 @@
 -(IBAction)BackButton:(id)sender;
 
 @property (nonatomic, retain) UIActivityIndicatorView *m_activity;
+
+
+@property (nonatomic, retain) NSString *urlString;
+
+//
+
 
 @end

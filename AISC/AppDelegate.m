@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import <Parse/Parse.h>
 
 @interface AppDelegate ()
 
@@ -22,9 +23,15 @@
     [[UINavigationBar appearance] setTitleTextAttributes:attributes];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
-    
 
+
+    [[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleLightContent];
     
+    [Parse setApplicationId:@"swB5Fu5IOlTM0MgheImLwSlnjfnzTHX5nDM7BOrz"
+                  clientKey:@"USccGbNybTiis12WcDXMcqo37K7gHug8ZVpjUtRz"];
+    
+    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
+
     
     
     return YES;
