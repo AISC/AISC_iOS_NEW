@@ -9,7 +9,7 @@
 #import "NewsletterCell.h"
 
 @implementation NewsletterCell
-
+@synthesize NameLabel;
 - (void)awakeFromNib {
     // Initialization code
 }

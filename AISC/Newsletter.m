@@ -10,8 +10,18 @@
 #import "Web.h"
 #import "NewsletterCell.h"
 
-@interface Newsletter ()
+#define UIColorFromRGB(rgbValue) [UIColor \
+colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 \
+green:((float)((rgbValue & 0xFF00) >> 8))/255.0 \
+blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
+
+@interface Newsletter ()
+{
+    NSMutableArray  *colorArray;
+    NSMutableArray *nameArray;
+    UILabel *navLabel;
+}
 @end
 
 @implementation Newsletter
@@ -25,15 +35,77 @@
     }
     return self;
 }
+-(void)awakeFromNib
+{
+     self.navigationController.navigationBar.topItem.title =@"";
+}
 -(BOOL)shouldAutorotate{
     return NO;
 }
 
+
+
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    
+  
+    
+    
+    [navLabel removeFromSuperview];
+    
+}
+-(void)viewDidAppear:(BOOL)animated
+{ self.title  =@"";
+     self.navigationController.navigationBar.topItem.title =@"";
+   
+    
+    [super viewDidAppear:YES];
+}
+- (IBAction)backAction
+{
+    [self.navigationController  popToRootViewControllerAnimated:YES];
+}
+     
+
+-(void)viewWillAppear:(BOOL)animated
+{
+     self.title  =@"";
+    self.navigationController.navigationBar.topItem.title =@"";
+    
+//    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:@"Back" style: UIBarButtonItemStyleBordered target:self action:@selector(Back)];
+//    self.navigationItem.leftBarButtonItem = backButton;
+    
+    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"back_navi.png"]
+                                                                   style:UIBarButtonItemStyleBordered
+                                                                  target:self
+                                                                  action:@selector(backAction)];
+    
+    self.navigationItem.leftBarButtonItem = backButton;
+
+    
+    ///back_Label
+  // self.navigationController.navigationBar.topItem.title =@"Back";
+    navLabel = [[UILabel alloc] initWithFrame:CGRectMake(80,4,150,30)];
+    navLabel.text = @"Newsletters";
+    navLabel.textAlignment = NSTextAlignmentCenter;
+    navLabel.font  =[UIFont fontWithName:@"HelveticaNeue-Bold" size:22];
+    navLabel.backgroundColor =[ UIColor clearColor];
+    navLabel.textColor = [UIColor whiteColor];
+    [self.navigationController.navigationBar addSubview:navLabel];
+ 
+    [super viewWillAppear:YES];
+    
+}
 -(NSUInteger)supportedInterfaceOrientations{
     return (UIInterfaceOrientationMaskPortrait);
 }
 - (void)viewDidLoad
 {
+    [self.navigationItem setHidesBackButton:YES];
+    self.title  =@"";
+    self.navigationController.navigationBar.topItem.title =@"";
+    
     arrayValue = [[NSMutableArray alloc] init];
     [arrayValue addObject:@"Head of School's Newsletter"];
     [arrayValue addObject:@"Elementary School Principal's Newsletter"];
@@ -42,12 +114,33 @@
     [arrayValue addObject:@"PCA Newsletter"];
 
     arrayValueImages = [[NSMutableArray alloc] init];
-    [arrayValueImages addObject:[UIImage imageNamed:@"hos.png"]];
-    [arrayValueImages addObject:[UIImage imageNamed:@"ES.png"]];
-    [arrayValueImages addObject:[UIImage imageNamed:@"MS.png"]];
-    [arrayValueImages addObject:[UIImage imageNamed:@"hs.png"]];
-    [arrayValueImages addObject:[UIImage imageNamed:@"pca.png"]];
+    [arrayValueImages addObject:[UIImage imageNamed:@"Head.png"]];
+    [arrayValueImages addObject:[UIImage imageNamed:@"e.png"]];
+    [arrayValueImages addObject:[UIImage imageNamed:@"m.png"]];
+    [arrayValueImages addObject:[UIImage imageNamed:@"h.png"]];
+    [arrayValueImages addObject:[UIImage imageNamed:@"p.png"]];
     
+    
+        nameArray =[[NSMutableArray alloc]init];
+        [nameArray addObject:@"Andrew Hoover"];
+        [nameArray addObject:@"Kevin Hall"];
+        [nameArray addObject:@"Alan Phan"];
+        [nameArray addObject:@"Joelle Basnight"];
+        [nameArray addObject:@"PCA President"];
+    
+    
+    
+  colorArray = [[NSMutableArray alloc]init];
+    
+    
+    [colorArray   addObject:UIColorFromRGB(0X36559e)];
+      [colorArray   addObject:UIColorFromRGB(0X0c7a3c)];
+      [colorArray   addObject:UIColorFromRGB(0Xe05e26)];
+      [colorArray   addObject:UIColorFromRGB(0X961d1f)];
+      [colorArray   addObject:UIColorFromRGB(0X36559e)];
+    
+    
+    self.view.backgroundColor = UIColorFromRGB(0Xd7d9d9);
 
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
@@ -74,12 +167,13 @@
     if(cell == nil)
     {
         cell = [[NewsletterCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        
     }
-    
+    cell.contentView.backgroundColor  = [UIColor colorWithPatternImage:[UIImage imageNamed:@"cbg.png"]];
     cell.titleLabel.text = [arrayValue objectAtIndex:indexPath.row];
     [cell.iconImageView setImage:[arrayValueImages objectAtIndex:indexPath.row]];
+    cell.NameLabel.textColor =[colorArray objectAtIndex:indexPath.row];
     
+      cell.NameLabel.text =[nameArray objectAtIndex:indexPath.row];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     return cell;
@@ -125,21 +219,21 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    if([[NSUserDefaults standardUserDefaults] boolForKey:@"PasswordEntered"]) {
+  //  if([[NSUserDefaults standardUserDefaults] boolForKey:@"PasswordEntered"]) {
 
         [self performSegueWithIdentifier:@"Web" sender:self];
 
-    }
-    else {
-        UIAlertView* dialog = [[UIAlertView alloc] initWithTitle:@"Enter Password" message:@"You only have to enter this password once then you can look at any Newsletter." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
-        [dialog setAlertViewStyle:UIAlertViewStylePlainTextInput];
-        
-        // Change keyboard type
-        [[dialog textFieldAtIndex:0] setKeyboardType:UIKeyboardTypeAlphabet];
-        [dialog show];
-    }
-    
-    
+////    }
+////    else {
+//        UIAlertView* dialog = [[UIAlertView alloc] initWithTitle:@"Enter Password" message:@"You only have to enter this password once then you can look at any Newsletter." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+//        [dialog setAlertViewStyle:UIAlertViewStylePlainTextInput];
+//        
+//        // Change keyboard type
+//        [[dialog textFieldAtIndex:0] setKeyboardType:UIKeyboardTypeAlphabet];
+//        [dialog show];
+//    }
+//    
+//    
     
     
 }
@@ -152,7 +246,7 @@
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     if (buttonIndex == 1)
     {
-        if ([[[alertView textFieldAtIndex:0]text] isEqualToString:@"raptors14"]) {
+        if ([[[alertView textFieldAtIndex:0]text] isEqualToString:@"raptors15"]) {
             [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"PasswordEntered"];
             [[NSUserDefaults standardUserDefaults] synchronize];
             

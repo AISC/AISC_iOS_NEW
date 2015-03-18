@@ -17,6 +17,9 @@
     NSMutableArray *arrayValueImages;
 
     IBOutlet UITextField *passwordTxt;
+    
+    
+    
 }
 
 -(IBAction)OkButton:(id)sender;

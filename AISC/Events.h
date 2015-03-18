@@ -21,11 +21,18 @@
     NSMutableArray *SelectEventNameArray;
     NSMutableArray *SelectEventDateArray;
     
-    NSMutableArray *arrrrrr;
+    NSMutableArray *arr;
     
     IBOutlet UITableView *MyTable;
     
     NSArray *events;
+    NSMutableArray *titlesArray1;
+    
+    NSMutableArray *datesArray1;
+    
+    NSMutableArray *arSelectedRows;
+    
+    NSString     *alertTitle;
 }
 
 -(IBAction)BackButton:(id)sender;

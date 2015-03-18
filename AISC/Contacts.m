@@ -30,28 +30,71 @@
     return (UIInterfaceOrientationMaskPortrait);
 }
 
+//-(void)viewDidLayoutSubviews
+//{
+    //[super viewDidLayoutSubviews];
+  //  [self.scrollView layoutIfNeeded];
+   
+//}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    //10,380,301,80
+
+     self.navigationController.navigationBar.topItem.title =@"Home";
+    imageView_main.frame = CGRectMake(10,10,self.view.frame.size.width-20,51 );
+    imageView_Andrew.frame = CGRectMake(10,70,self.view.frame.size.width-20,80);
+    imageView_Joelle.frame = CGRectMake(10,174,self.view.frame.size.width-20,80);
+    imageView_AlanPhan.frame = CGRectMake(10,277,self.view.frame.size.width-20,80);
+    imageView_KevinHall.frame = CGRectMake(10,380,self.view.frame.size.width-20,80);
+    imageView_KimBane.frame = CGRectMake(10,484,self.view.frame.size.width-20,80);
+    imageView_KevinCrouch.frame = CGRectMake(10,584,self.view.frame.size.width-20,80);
+    imageView_AlankritAror  .frame = CGRectMake(10,682,self.view.frame.size.width-20,80 );
+    
+     self.scrollView.frame  = CGRectMake(0, 44+20, self.view.frame.size.width,self.view.frame.size.height);
+     self.scrollView.contentSize = CGSizeMake(320, 840);
+    
+    [scrollView addSubview:imageView_Andrew];
+    [scrollView addSubview:imageView_Joelle];
+    [scrollView addSubview:imageView_AlanPhan];
+    [scrollView addSubview:imageView_KevinHall];
+    [scrollView addSubview:imageView_KimBane];
+    [scrollView addSubview:imageView_KevinCrouch];
+    [scrollView addSubview:imageView_AlankritAror];
+    [scrollView addSubview:imageView_main];
+
+    
+    
+    
+    
+     [self.view addSubview:scrollView];
     // Do any additional setup after loading the view from its nib.
     
-    
-    self.namesArray = @[@"Andrew Hoover", @"Joelle Basnight", @"Alan Phan", @"Kevin Hall", @"Kim Bane", @"Kevin Crouch", @"Alankrit Arora"];
-    
-    self.picturesArray = @[@"hoover3.jpg", @"Basnight_Joelle.jpg", @"alan.jpg", @"kevin hall.jpg", @"Kim Bane.jpg", @"kevin.jpg", @"Alankrit.jpg"];
-    
-    self.emailsArray = @[@"headofschool@aisch.org", @"hsprincipal@aisch.org", @"msprincipal@aisch.org", @"esprincipal@aisch.org", @"bkim@aisch.org", @"itdirector@aisch.org", @"directorofbuisnessaffairs@aisch.org"];
 
 }
 
--(void)ComposeMailButton:(id)sender
+-(IBAction)ComposeMailButton:(id)sender
 {
     [self mailSend:[sender currentTitle]];
 }
 
 -(IBAction)PhoneCallButton:(id)sender
 {
-    [self phoneDialAuto:@"044-22549000"];
+    
+    UIDevice *device = [UIDevice currentDevice];
+    NSLog(@"dev %@",[device model]);
+
+        if([[device model] isEqualToString:@"iPhone"])
+        {
+            [self phoneDialAuto:@"044-22549000"];
+        }
+        else
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Message" message:@"Calling feature is not supported by this device "  delegate:self cancelButtonTitle:@"OK"otherButtonTitles: nil];
+            [alert show];
+        }
+
 }
 
 -(void)mailSend:(NSString *)mailstr
@@ -59,6 +102,7 @@
     if ([MFMailComposeViewController canSendMail])
     {
         MFMailComposeViewController *mailer = [[MFMailComposeViewController alloc] init];
+        mailer.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         mailer.mailComposeDelegate = self;
         [mailer setSubject:@""];
         NSArray *toRecipients = [NSArray arrayWithObjects:mailstr, nil];
@@ -66,7 +110,9 @@
         NSString *emailBody = @"";
         [mailer setMessageBody:emailBody isHTML:NO];
         mailer.navigationBar.barStyle = UIBarStyleBlackOpaque;
-        [self presentViewController:mailer animated:NO completion:nil];
+        
+        //[[self navigationController]pushViewController:mailer animated:YES];
+    [self presentViewController:mailer animated:YES completion:nil];
     }
     else
     {
@@ -116,43 +162,6 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return self.namesArray.count;
-}
-
-// Row display. Implementers should *always* try to reuse cells by setting each cell's reuseIdentifier and querying for available reusable cells with dequeueReusableCellWithIdentifier:
-// Cell gets various attributes set automatically based on table (separators) and data source (accessory views, editing controls)
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    ContactsCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ContactCell"];
-    
-    cell.nameLabel.text = [self.namesArray objectAtIndex:indexPath.row];
-    cell.pictureImageView.image = [UIImage imageNamed:[self.picturesArray objectAtIndex:indexPath.row]];
-    [cell.emailButton setTitle:[self.emailsArray objectAtIndex:indexPath.row] forState:UIControlStateNormal];
-
-    cell.emailButton.titleLabel.textAlignment = NSTextAlignmentLeft;
-    cell.emailButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-
-    [cell.emailButton addTarget:self action:@selector(ComposeMailButton:) forControlEvents:UIControlEventTouchUpInside];
-    
-    return cell;
-}
-
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return 100;
-}
-
-
-
-
-
 
 
 

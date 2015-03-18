@@ -7,6 +7,7 @@
 //
 
 #import "Web.h"
+#import "Reachability.h"
 
 @interface Web () <UIWebViewDelegate>
 
@@ -32,6 +33,30 @@
 }
 - (void)viewDidLoad
 {
+
+    
+    Reachability* reachability = [Reachability reachabilityWithHostName:@"www.apple.com"];
+    NetworkStatus remoteHostStatus = [reachability currentReachabilityStatus];
+    
+    if(remoteHostStatus == NotReachable)
+    {
+        UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"Alert!" message:@"Your phone does not currently have an Internet connection. Please connect and try again." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        alert.tag = 153;
+        [alert show];
+        return;
+    }
+
+        
+    if([self.urlString isEqualToString:@"http://aiscgallery.smugmug.com/"])
+    {
+        self.navigationController.navigationBar.topItem.title = @"Home";
+    }
+    else
+    {
+        self.navigationController.navigationBar.topItem.title = @"Back";
+    }
+    
+    NSLog(@"==>%@",self.urlString );
     NSURL *url = [NSURL URLWithString:self.urlString];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [webView loadRequest:request];

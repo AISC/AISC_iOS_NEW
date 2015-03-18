@@ -11,7 +11,22 @@
 
 @interface Contacts : UIViewController <MFMailComposeViewControllerDelegate, UIScrollViewDelegate>
 {
+   IBOutlet UIScrollView *scrollView;
+    
+    IBOutlet UIImageView *imageView_main;
+    
+    IBOutlet UIImageView *imageView_Andrew;
+   IBOutlet UIImageView *imageView_Joelle;
+   IBOutlet UIImageView *imageView_AlanPhan;
+   IBOutlet UIImageView *imageView_KevinHall;
+   IBOutlet UIImageView *imageView_KimBane;
+    IBOutlet UIImageView *imageView_KevinCrouch;
 
+   IBOutlet UIImageView *imageView_AlankritAror;
+
+    
 }
 
+-(IBAction)ComposeMailButton:(id)sender;
+@property(nonatomic,retain)UIScrollView *scrollView;
 @end

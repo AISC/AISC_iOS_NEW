@@ -10,6 +10,9 @@
 
 @interface Home : UIViewController {
     
+    
+    IBOutlet UIButton  *notificationButton;
 }
 
+-(IBAction)notificationView:(id)sender;
 @end

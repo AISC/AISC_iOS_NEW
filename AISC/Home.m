@@ -9,9 +9,15 @@
 #import "Home.h"
 #import <Parse/Parse.h>
 #import "Web.h"
-
+#import "NotificationViewController.h"
+#define UIColorFromRGB(rgbValue) [UIColor \
+colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 \
+green:((float)((rgbValue & 0xFF00) >> 8))/255.0 \
+blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 @interface Home ()
-
+{
+    UILabel *navLabel;
+}
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UILabel *label;
 @property (strong, nonatomic) NSMutableArray *images;
@@ -32,14 +38,56 @@
     return (UIInterfaceOrientationMaskPortrait);
 }
 
+-(IBAction)notificationView:(id)sender
+{
+    NotificationViewController  *notification = [self.storyboard instantiateViewControllerWithIdentifier:@"notification"];
+    [[self navigationController]pushViewController:notification animated:YES];
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+      self.navigationController.navigationBar.topItem.title =@"";
+    
+   
+        navLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,4,self.view.frame.size.width,30)];
+        navLabel.text = @"Home";
+        navLabel.textAlignment = NSTextAlignmentCenter;
+        navLabel.font  =[UIFont fontWithName:@"HelveticaNeue-Bold" size:22];
+        navLabel.backgroundColor =[ UIColor clearColor];
+        navLabel.textColor = [UIColor whiteColor];
+        [self.navigationController.navigationBar addSubview:navLabel];
+        self.navigationController.navigationBar.topItem.title =@"";
+        [super viewWillAppear:YES];
+
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    
+    [navLabel removeFromSuperview];
+    
+}
+-(void)viewDidAppear:(BOOL)animated
+{
+    self.navigationController.navigationBar.topItem.title =@"";
+    
+    [super viewDidAppear:YES];
+}
 - (void)viewDidLoad
 {
+   
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(PushtoNotification:) name:@"pushTOnoti" object:Nil];
+    
+     self.navigationController.navigationBar.topItem.title =@"";
+
+    notificationButton.backgroundColor   = UIColorFromRGB(0X354b94);
     [super viewDidLoad];
 
-    self.title = @"Home";
     
     self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:56/255.0 green:84/255.0 blue:155/255.0 alpha:1.0];
-    if( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone )
+//
+//    self.images = [NSMutableArray arrayWithObjects:[UIImage imageNamed:@"compassion.png"], [UIImage imageNamed:@"confidence.png"], [UIImage imageNamed:@"courage.png"], [UIImage imageNamed:@"creativity.png"], nil];
+   if( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone )
     {
         
         CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
@@ -56,7 +104,7 @@
             [query findObjectsInBackgroundWithBlock:^(NSArray *objectsfive, NSError *error) {
                 if (!error)
                 {
-                    self.images = [[NSMutableArray alloc] initWithCapacity:objectsfive.count];
+                            self.images = [[NSMutableArray alloc] initWithCapacity:objectsfive.count];
                     
                     // Do something with the found objects
                     for (PFObject *objectfive in objectsfive)
@@ -66,7 +114,7 @@
                             if (!error)
                             {
                                 [self.images addObject:[UIImage imageWithData:data]];
-                                
+   
                             }
                             else
                             {
@@ -212,7 +260,7 @@
                             }
                         }];
                     }
-                }
+                                     }
                 else
                 {
                     // Log details of the failure
@@ -225,12 +273,18 @@
     
     
 
-   // self.images = [NSMutableArray arrayWithObjects:[UIImage imageNamed:@"banner1.jpg"], [UIImage imageNamed:@"banner2.jpg"], [UIImage imageNamed:@"banner3.jpg"], [UIImage imageNamed:@"banner4.jpg"], nil];
     
-    self.titles = [NSMutableArray arrayWithObjects:@"Courage", @"Compassion", @"Creativity", @"Confidence", nil];
+   // self.images = [NSMutableArray arrayWithObjects:[UIImage imageNamed:@"courage.png"], [UIImage imageNamed:@"confidence.png"], [UIImage imageNamed:@"creativity.png"], [UIImage imageNamed:@"compassion.png"], nil];
+    
+    
+    // Courage,Confidence,Creativity,Compassion
+  self.titles = [NSMutableArray arrayWithObjects:@"Courage", @"Confidence", @"Creativity", @"Compassion", nil];
+    
+    //self.titles = [NSMutableArray arrayWithObjects:@"Compassion", @"Confidence", @"Courage", @"Creativity", nil];
     
     self.imageView.image = [self.images objectAtIndex:self.currentImage];
-    self.label.text = [self.titles objectAtIndex:self.currentImage];
+
+    //self.label.text = [self.titles objectAtIndex:self.currentImage];
 
     [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(changeImage) userInfo:nil repeats:YES];
 }
@@ -273,5 +327,17 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+#pragma mark Noti Action
+
+-(void)PushtoNotification:(NSNotification *)notification
+{
+    if ([notification.name isEqual:@"pushTOnoti"]) {
+        
+        [self notificationView:self];
+        
+    }
+}
+
 
 @end

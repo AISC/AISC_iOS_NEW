@@ -33,6 +33,9 @@
 }
 - (void)viewDidLoad
 {
+      self.navigationController.navigationBar.topItem.title =@"Home";
+    self.title  =@"Locate us";
+    
     UITapGestureRecognizer* phoneLblGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(PhoneLblTapped:)];
     // if labelView is not set userInteractionEnabled, you must do so
     [PhoneLabel setUserInteractionEnabled:YES];
@@ -69,17 +72,45 @@
 - (IBAction)directionsClicked:(id)sender {
     
     
-    NSString* addr = [NSString stringWithFormat:@"http://maps.apple.com/maps?daddr=%1.6f,%1.6f&saddr=Posizione attuale", 12.981727,80.246396];
-    NSURL* url = [[NSURL alloc] initWithString:[addr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    [[UIApplication sharedApplication] openURL:url];
+    double lon = 80.246433;
+    double lat = 12.982186;
+    
+    NSString *appleLink2 = [NSString stringWithFormat: @"http://maps.apple.com/maps?daddr=%f,%f", lat   , lon];
+    
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:appleLink2]];
+
+    
+//    NSString* addr = [NSString stringWithFormat:@"http://maps.apple.com/maps?daddr=%1.6f,%1.6f&saddr=Posizione attuale", 12.981727,80.246396];
+//    NSURL* url = [[NSURL alloc] initWithString:[addr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    
+    
+    //[[UIApplication sharedApplication] openURL:url];
     
 }
 
 -(IBAction)PhoneLblTapped:(id)sender
 {
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"tel://04422549000"]];
-}
+    
+    UIDevice *device = [UIDevice currentDevice];
+    NSLog(@"dev %@",[device model]);
+    
+    if([[device model] isEqualToString:@"iPhone"])
+    {
+        [self phoneDialAuto:@"044-22549000"];
+    }
+    else
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Message" message:@"Calling feature is not supported by this device "  delegate:self cancelButtonTitle:@"OK"otherButtonTitles: nil];
+        [alert show];
+    }
 
+}
+-(void)phoneDialAuto:(NSString *)phonestr
+{
+    NSString *teleFormat = @"telprompt://";
+    NSString *phoneNumber = [teleFormat stringByAppendingString:phonestr];
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:phoneNumber]];
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

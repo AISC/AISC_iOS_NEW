@@ -10,4 +10,8 @@
 
 @interface SocialViewController : UIViewController
 
+{
+    UILabel *nav_Label ;
+     UILabel *back_Label ;
+}
 @end
